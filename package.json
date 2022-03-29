@@ -7,9 +7,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
+    "quasar": "^2.0.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
+    "vue-property-decorator": "^9.1.2",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
@@ -18,6 +21,7 @@
     "@vue/cli-plugin-typescript": "~4.5.14",
     "@vue/cli-service": "~4.5.14",
     "@vue/compiler-sfc": "^3.0.0",
-    "typescript": "~4.1.5"
+    "typescript": "~4.1.5",
+    "vue-cli-plugin-quasar": "~4.0.4"
   }
 }
