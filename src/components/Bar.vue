@@ -13,7 +13,7 @@
       </q-img>
       <p class="hora no-margin">{{ hora }}</p>
     </div>
-    <MenuBar v-if="sMenuBar" id="menuBar"/>
+    <MenuBar @runApp="teste(args)" v-if="sMenuBar" id="menuBar"/>
   </div>
 </template>
 

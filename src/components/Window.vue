@@ -45,18 +45,22 @@
         </q-breadcrumbs>
       </div>
     </div>
-    <div>
-      <iframe src="https://stackoverflow.com/questions/40760907/open-webpage-inside-the-html-body" title="W3Schools Free Online Web Tutorials">
-      </iframe>
-    </div>
+    <Lixeira v-if="nomePrograma === 'Lixeira'"/>
+    <MeuComputador v-if="nomePrograma === 'Meu Computador'" />
+    <Personalizar v-if="nomePrograma === 'Personalizar'"/>
   </div>
 </template>
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
 import {Emit, Prop} from "vue-property-decorator";
+import Lixeira from "@/apps/Lixeira.vue";
+import MeuComputador from "@/apps/MeuComputador.vue";
+import Personalizar from "@/apps/Personalizar.vue";
 
-@Options({component: {}})
+@Options({
+  components: {Personalizar, MeuComputador, Lixeira},
+  component: {}})
 export default class Window extends Vue{
 
   @Emit("close")

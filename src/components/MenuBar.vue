@@ -10,7 +10,7 @@
     </q-card-section>
     <q-card-section id="apps" class="no-padding flex row">
       <div id="appsWhite" class="q-pa-sm">
-        <div v-for="item in apps" style="cursor: pointer" class="flex row items-center q-gutter-x-sm q-pb-lg">
+        <div v-for="item in apps" @click="$emit('runApp', item.nome)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appName">{{item.nome}}</span>
         </div>
@@ -22,12 +22,12 @@
       </div>
 
       <div id="appsBlue" class="q-pa-sm">
-        <div v-for="item in appsPasta" style="cursor: pointer" class="flex row items-center q-gutter-x-sm q-pb-lg">
+        <div v-for="item in appsPasta" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
             <span class="appNameSystem">{{item.nome}}</span>
         </div>
         <q-separator class="q-mb-md"></q-separator>
-        <div v-for="item in appsSystem" style="cursor: pointer" class="flex row items-center q-gutter-x-sm q-pb-lg">
+        <div v-for="item in appsSystem" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appNameSystem">{{item.nome}}</span>
         </div>
@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import {Vue} from "vue-class-component";
+import {Emit} from "vue-property-decorator";
 
 export default class MenuBar extends Vue{
 
@@ -59,6 +60,11 @@ export default class MenuBar extends Vue{
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)
+  }
+
+  @Emit("runApp")
+  runApp(){
+    return 'bola';
   }
 }
 </script>
@@ -92,6 +98,9 @@ export default class MenuBar extends Vue{
   background-color: #d1e7f4;
   flex: 1 auto;
 }
+.app:hover {
+  background-color: #0f84e1;
+}
 .appName{
   font-size: 16px;
   font-weight: bold;
@@ -115,4 +124,5 @@ export default class MenuBar extends Vue{
   width: 2px;
   border-radius: 4px;
 }
+
 </style>

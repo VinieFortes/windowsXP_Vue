@@ -61,7 +61,7 @@
 
         </q-item>
         <q-separator />
-        <q-item clickable v-close-popup>
+        <q-item @click="menuClick('Personalizar')" clickable v-close-popup>
           <q-item-section>Personalizar</q-item-section>
         </q-item>
       </q-list>
@@ -103,6 +103,12 @@ export default class Home extends Vue {
     this.showWindow = true
     this.nomePrograma = nome
     this.iconPrograma = icon
+  }
+
+  menuClick(nome: any){
+    this.showWindow = true
+    this.nomePrograma = nome
+    this.iconPrograma = 'computer.png'
   }
 
   maximizeWindow(){
