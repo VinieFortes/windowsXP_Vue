@@ -87,6 +87,7 @@ export default class Home extends Vue {
   icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
 
   mounted(){
+    const sound = ( new Audio( require('@/assets/wellcome.mp3') ).play());
     document.addEventListener("contextmenu", function (e){
       e.preventDefault();
     }, false);
@@ -114,10 +115,17 @@ export default class Home extends Vue {
   maximizeWindow(){
     const window = document.getElementsByClassName("window");
     Array.prototype.forEach.call(window, function(el) {
-      el.style.top = '0'
-      el.style.left = '0'
-      el.style.width = '100%'
-      el.style.height = '100%'
+      if(el.style.height === '100%' && el.style.width === '100%'){
+        el.style.top = '20%'
+        el.style.left = '25%'
+        el.style.width = '50%'
+        el.style.height = '50%'
+      }else {
+        el.style.top = '0'
+        el.style.left = '0'
+        el.style.width = '100%'
+        el.style.height = '100%'
+      }
     })
   }
 

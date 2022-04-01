@@ -13,7 +13,7 @@
       </q-img>
       <p class="hora no-margin">{{ hora }}</p>
     </div>
-    <MenuBar @runApp="teste(args)" v-if="sMenuBar" id="menuBar"/>
+    <MenuBar @appName="app" v-if="sMenuBar" id="menuBar"/>
   </div>
 </template>
 
@@ -27,6 +27,10 @@ export default class Bar extends Vue{
   hora = ''
   icones = [{img: 'msn.png', tooltip: '0 mensagens novas no MSN'}, {img: 'defender.png', tooltip: 'O Windows Defender esta desativado'}, {img: 'net.png', tooltip: 'Conexão de rede estavel'}, {img: 'som.png', tooltip: 'Som do sistema' }]
   sMenuBar = false
+
+  app(nome: any, icon: any){
+    console.log(nome, icon)
+  }
 
   showMenuBar(){
     this.sMenuBar ? this.sMenuBar = false: this.sMenuBar = true;

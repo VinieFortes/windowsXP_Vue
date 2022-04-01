@@ -10,7 +10,7 @@
     </q-card-section>
     <q-card-section id="apps" class="no-padding flex row">
       <div id="appsWhite" class="q-pa-sm">
-        <div v-for="item in apps" @click="$emit('runApp', item.nome)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in apps" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appName">{{item.nome}}</span>
         </div>
@@ -62,9 +62,8 @@ export default class MenuBar extends Vue{
     return require('../assets/'+pic)
   }
 
-  @Emit("runApp")
-  runApp(){
-    return 'bola';
+  runApp(nome: any, img: any){
+    this.$emit('appName', nome, img)
   }
 }
 </script>
