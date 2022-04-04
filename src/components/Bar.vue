@@ -8,7 +8,7 @@
 
     </div>
     <div class="barOptions flex row q-pa-sm items-center">
-      <q-img v-for="item in icones" class="icones" alt="logo" :src="getImgUrl(item.img)">
+      <q-img v-for="item in icones" class="icones" @click="app(item.nome, item.img, sMenuBar = true)" alt="logo" :src="getImgUrl(item.img)">
         <q-tooltip class="bg-white text-black" :offset="[10, 10]">{{ item.tooltip }}</q-tooltip>
       </q-img>
       <p class="hora no-margin">{{ hora }}</p>
@@ -25,11 +25,12 @@ import MenuBar from "@/components/MenuBar.vue";
 export default class Bar extends Vue{
 
   hora = ''
-  icones = [{img: 'msn.png', tooltip: '0 mensagens novas no MSN'}, {img: 'defender.png', tooltip: 'O Windows Defender esta desativado'}, {img: 'net.png', tooltip: 'Conexão de rede estavel'}, {img: 'som.png', tooltip: 'Som do sistema' }]
+  icones = [{img: 'msn.png', nome: 'MSN', tooltip: '0 mensagens novas no MSN'}, {img: 'defender.png', nome: 'Windows Defender', tooltip: 'O Windows Defender esta desativado'}, {img: 'net.png', nome: 'Redes', tooltip: 'Conexão de rede estavel'}, {img: 'som.png', nome:'Som do sistema', tooltip: 'Som do sistema' }]
   sMenuBar = false
 
   app(nome: any, icon: any){
-    console.log(nome, icon)
+    this.$emit('appBar', nome, icon)
+    this.showMenuBar()
   }
 
   showMenuBar(){

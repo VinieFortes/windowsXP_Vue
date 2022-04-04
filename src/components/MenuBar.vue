@@ -22,12 +22,12 @@
       </div>
 
       <div id="appsBlue" class="q-pa-sm">
-        <div v-for="item in appsPasta" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in appsPasta" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
             <span class="appNameSystem">{{item.nome}}</span>
         </div>
         <q-separator class="q-mb-md"></q-separator>
-        <div v-for="item in appsSystem" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in appsSystem" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appNameSystem">{{item.nome}}</span>
         </div>

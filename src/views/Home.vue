@@ -6,7 +6,7 @@
         <span class="texticon text-white">{{ item.nome }}</span>
       </div>
     </div>
-    <Bar class="bar"></Bar>
+    <Bar @appBar="openWindow" class="bar"></Bar>
     <q-menu
         touch-position
         context-menu
