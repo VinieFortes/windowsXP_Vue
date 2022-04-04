@@ -85,13 +85,31 @@ export default class Home extends Vue {
   nomePrograma = ''
   iconPrograma = ''
   icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
+  dadosWindows = {}
 
   mounted(){
     const sound = ( new Audio( require('@/assets/wellcome.mp3') ).play());
     document.addEventListener("contextmenu", function (e){
       e.preventDefault();
     }, false);
+    const wallpaper = document.getElementById('home');
+    if(!window.localStorage.getItem('winXP')){
+      this.dadosWindows = {wallpaper: 'wallpaper.jpg'}
+      window.localStorage.setItem('winXP', JSON.stringify(this.dadosWindows))
+      wallpaper!.style.backgroundImage = 'url(' + this.getImgUrl('wallpaper.jpg') + ')';
+    }else {
+        this.setWallpaper()
+    }
   }
+
+  setWallpaper(){
+    const wallpaper = document.getElementById('home');
+    const dados = window.localStorage.getItem('winXP')
+    const dadosObj = JSON.parse(dados!)
+    wallpaper!.style.backgroundImage = 'url(' + this.getImgUrl(`${dadosObj.wallpaper}`) + ')';
+    setTimeout(this.setWallpaper, 1000)
+  }
+
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)
@@ -171,10 +189,10 @@ export default class Home extends Vue {
   user-select: none;
 }
 
-.wallpaper{
-  background-image: url("../assets/wallpaper.jpg");
+#home{
   background-size: cover;
 }
+
 .bar{
   position: absolute;
   bottom: 0;
