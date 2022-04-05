@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-/script
 
 
 # local env files
@@ -22,3 +21,4 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+/script/
