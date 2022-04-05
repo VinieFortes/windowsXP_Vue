@@ -40,7 +40,7 @@
           <p class="q-pl-sm q-mt-md" style="color: white; font-weight: bold">Fazer Logoff</p>
         </div>
         <div class="flex row flex-center">
-          <q-btn class="offBtn" glossy size="8px" icon="power_settings_new"></q-btn>
+          <q-btn @click="$router.push('/shutdown')" class="offBtn" glossy size="8px" icon="power_settings_new"></q-btn>
           <p class="q-pl-sm q-mt-md" style="color: white; font-weight: bold">Desligar</p>
         </div>
       </div>

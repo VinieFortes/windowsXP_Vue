@@ -1,23 +1,10 @@
 <template>
-  <q-page class="backgroud flex flex-center">
+  <q-page style="cursor: wait" class="backgroud flex flex-center">
     <div class="second_back flex flex-center q-pa-md">
-      <div class="flex column">
+      <div style="margin-left: 20%" class="flex column">
         <img class="xplogo" src="../assets/xplogo.png" alt="logo">
-        <p class="startTitle">Para iniciar, selecione o usuário</p>
+        <p class="startTitle">{{ texto }}</p>
       </div>
-      <q-separator vertical class="q-ml-md q-mr-md bg-white"></q-separator>
-      <div class="flex column">
-        <div @click="gotoHome" class="cardUser flex row flex-center">
-          <q-avatar size="64px" rounded>
-            <img class="user" src="../assets/dog.jpg" alt="logo">
-          </q-avatar>
-          <p class="userName">Administrador</p>
-        </div>
-      </div>
-    </div>
-    <div class="flex row flex-center" style="position: absolute; bottom: 35px; left: 50px">
-      <q-btn @click="$router.push('/shutdown')" class="offBtn" glossy size="11px" icon="power_settings_new"></q-btn>
-      <p class="q-pl-sm q-mt-md" style="color: white; font-weight: bold">Desligar</p>
     </div>
   </q-page>
 </template>
@@ -25,16 +12,24 @@
 <script lang="ts">
 import {Vue} from "vue-class-component";
 
-export default class LoginScreen extends Vue{
+export default class ShutDownScreen extends Vue{
 
-  gotoHome(){
-    this.$router.push('/')
+  textos = ['Fazendo Logoff ...', 'Salvando suas configurações ...', 'Windows está encerrando ...'];
+  texto = ''
+
+  mounted(){
+    window.sessionStorage.setItem('WinXP_start', '0')
+    const sound = ( new Audio( require('@/assets/end.mp3') ).play());
+    setTimeout(()=>{this.texto = 'Fazendo Logoff ...'}, 1000)
+    setTimeout(()=>{this.texto = 'Salvando suas configurações ...'}, 3000)
+    setTimeout(()=>{this.texto = 'Windows está encerrando ...'}, 5000)
+    setTimeout(()=>{window.location.href = 'https://github.com/VinieFortes/windowsXP_Vue'}, 7000)
   }
+
 }
 </script>
 
 <style scoped>
-
 *{
   -webkit-touch-callout: none;
   -webkit-user-select: none;

@@ -10,7 +10,12 @@ import {Options, Vue} from "vue-class-component";
 export default class App extends Vue{
 
   beforeMount(){
-    this.$router.push('/login')
+    if(window.sessionStorage.getItem('WinXP_start') === '1'){
+      this.$router.push('/login')
+    }else {
+      this.$router.push('/startup')
+    }
+
   }
 
 }

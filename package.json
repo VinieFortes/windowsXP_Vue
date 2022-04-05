@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "build:git": "vue-cli-service build && sh ./script/send_git.sh"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
