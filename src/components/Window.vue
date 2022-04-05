@@ -136,14 +136,14 @@ export default class Window extends Vue{
   text-align: center;
   resize: both;
   overflow: auto;
-  border: #0054e4 solid 5px;
+  border: var(--main-color) solid 5px;
   border-radius: 10px;
 }
 #mydivheader {
   padding: 5px;
   cursor: move;
   z-index: 10;
-  background-color: #0054e4;
+  background-color: var(--main-color);
   color: #fff;
 }
 

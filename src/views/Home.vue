@@ -1,7 +1,7 @@
 <template>
   <q-page class="wallpaper flex column" id="home" @click="leftClick" @contextmenu.native="rightClick($event)">
     <div style="height: 93%; width: 100%; position: absolute" class="drag icones flex column">
-      <div>
+      <div id="grid" class="q-pa-sm">
         <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
           <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
           <span class="texticon text-white">{{ item.nome }}</span>
@@ -36,27 +36,16 @@
           <q-menu anchor="top end" self="top start">
             <q-list>
               <q-item
-                  v-for="n in 3"
-                  :key="n"
                   dense
                   clickable
               >
-                <q-item-section>Submenu Label</q-item-section>
-                <q-item-section side>
-                  <q-icon name="keyboard_arrow_right" />
-                </q-item-section>
-                <q-menu auto-close anchor="top end" self="top start">
-                  <q-list>
-                    <q-item
-                        v-for="n in 3"
-                        :key="n"
-                        dense
-                        clickable
-                    >
-                      <q-item-section>3rd level Label</q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-menu>
+                <q-item-section @click="newFile('pasta')" >Pasta Vazia</q-item-section>
+              </q-item>
+              <q-item
+                  dense
+                  clickable
+              >
+                <q-item-section @click="newFile('file')">Arquivo</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -122,6 +111,9 @@ export default class Home extends Vue {
       this.dadosWindows = {wallpaper: 'wallpaper.jpg'}
       window.localStorage.setItem('winXP', JSON.stringify(this.dadosWindows))
       wallpaper!.style.backgroundImage = 'url(' + this.getImgUrl('wallpaper.jpg') + ')';
+      const dados = window.localStorage.getItem('winXP')
+      const dadosObjs = JSON.parse(dados!)
+      document.body.style.setProperty('--main-color',dadosObjs.color)
     }else {
         this.setWallpaper()
     }
@@ -129,7 +121,17 @@ export default class Home extends Vue {
 
   dadosPersonalizar(){
     this.setWallpaper()
+    if(window.localStorage.getItem('winXP')){
+      const dados = window.localStorage.getItem('winXP')
+      const dadosObjs = JSON.parse(dados!)
+      document.body.style.setProperty('--main-color',dadosObjs.color)
+    }
   }
+
+  newFile(args: any){
+    args === 'pasta' ? this.icones.push({img: 'pasta.png', nome: 'Pasta vazia'}) : (args === 'file' ? this.icones.push({img: 'file.png', nome: 'Novo arquivo'}) : null )
+  }
+
 
   setWallpaper(){
     const wallpaper = document.getElementById('home');
@@ -205,6 +207,17 @@ export default class Home extends Vue {
 
 #home{
   background-size: cover;
+  overflow: hidden;
+}
+
+#grid{
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(6, auto);
+  max-height: 100vh;
+  overflow: hidden;
+  align-items: start;
+  width: fit-content;
 }
 
 .bar{

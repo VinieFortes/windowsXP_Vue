@@ -12,6 +12,12 @@ import {Vue} from "vue-class-component";
 
 export default class StartupScreen extends Vue{
 
+  beforeMount(){
+    if(window.sessionStorage.getItem('WinXP_start') === '1') {
+      this.$router.push('/login')
+    }
+  }
+
   mounted(){
     window.sessionStorage.setItem('WinXP_start', '1')
     setTimeout(()=>{this.$router.push('/login')}, 5000)

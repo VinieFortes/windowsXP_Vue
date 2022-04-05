@@ -54,7 +54,7 @@ import {Emit} from "vue-property-decorator";
 
 export default class MenuBar extends Vue{
 
-  apps = [{img: 'explorer.png', nome: 'Intenet Explorer'}, {img: 'email.png', nome: 'E-mail'}, {img: 'media.png', nome: 'Windows Media Player'}, {img: 'firefox.png', nome: 'Mozilla Firefox'}, {img: 'live.png', nome: 'Windows Messenger'}, {img: 'wordpad.png', nome: 'WordPad'}, {img: 'paint.png', nome: 'Paint'}]
+  apps = [{img: 'explorer.png', nome: 'Internet Explorer'}, {img: 'email.png', nome: 'E-mail'}, {img: 'media.png', nome: 'Windows Media Player'}, {img: 'firefox.png', nome: 'Mozilla Firefox'}, {img: 'live.png', nome: 'Windows Messenger'}, {img: 'wordpad.png', nome: 'WordPad'}, {img: 'paint.png', nome: 'Paint'}]
   appsPasta = [{img: 'pasta.png', nome: 'Meus Documentos'}, {img: 'pasta.png', nome: 'Minhas Imagens'}, {img: 'pasta.png', nome: 'Minhas Musicas'}]
   appsSystem = [{img: 'computer.png', nome: 'Meu Computador'}, {img: 'net.png', nome: 'Redes'}, {img: 'panel.png', nome: 'Painel de Controle'}]
 

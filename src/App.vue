@@ -9,10 +9,6 @@ import {Options, Vue} from "vue-class-component";
 
 export default class App extends Vue{
 
-
-
-
-
   beforeMount(){
     if(window.sessionStorage.getItem('WinXP_start') === '1'){
       this.$router.push('/login')
@@ -22,9 +18,12 @@ export default class App extends Vue{
 
   }
 
+
 }
 </script>
 
 <style>
-
+:root {
+  --main-color: #0054e4;
+}
 </style>
