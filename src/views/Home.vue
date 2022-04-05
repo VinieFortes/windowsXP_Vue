@@ -1,7 +1,7 @@
 <template>
   <q-page class="wallpaper" id="home" @click="leftClick" @contextmenu.native="rightClick($event)">
     <div class="icones flex column q-pa-md">
-      <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)" v-on:click="checkoneclick(item.nome)"  class="Icon flex column flex-center">
+      <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
         <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
         <span class="texticon text-white">{{ item.nome }}</span>
       </div>
@@ -68,17 +68,26 @@
 
     </q-menu>
     <window v-if="showWindow" @close="showWindow = false" @maximize="maximizeWindow()" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
+    <vue-selecto
+        :selectableTargets="['.Icon']"
+        :hitRate="10"
+        :selectByClick="true"
+        :continueSelect="true"
+        @selectEnd="onSelectEnd"
+    />
   </q-page>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import Bar from '@/components/Bar.vue';
+import { VueSelecto } from "vue3-selecto";
 import Window from "@/components/Window.vue";
 
 @Options({
-  components: {Window, Bar},
+  components: {VueSelecto, Bar, Window}
 })
+
 export default class Home extends Vue {
 
   showWindow = false
@@ -86,6 +95,17 @@ export default class Home extends Vue {
   iconPrograma = ''
   icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
   dadosWindows = {}
+
+  onSelectEnd(e: any){
+    Array.prototype.forEach.call(e.selected, function(el) {
+    if(el.style.backgroundColor === 'blue'){
+      el.style.backgroundColor = null
+    }else {
+      el.style.backgroundColor = 'blue'
+    }
+      e.currentTarget.selectedTargets = []
+  })
+  }
 
   mounted(){
     const sound = ( new Audio( require('@/assets/wellcome.mp3') ).play());
@@ -156,20 +176,6 @@ export default class Home extends Vue {
         }
     });
     this.openWindow(eltoOpen, icon)
-  }
-
-  checkoneclick(nome: any){
-    const els = document.getElementsByClassName("Icon");
-    Array.prototype.forEach.call(els, function(el) {
-
-      if(nome === el.id){
-        if(el.style.backgroundColor === 'blue'){
-          el.style.backgroundColor = null
-        }else {
-          el.style.backgroundColor = 'blue'
-        }
-      }
-    });
   }
 
   rightClick(){
