@@ -30,6 +30,7 @@ export default class  Personalizar extends Vue{
   selectWallpaper(wall: any){
     this.dadosObj = {wallpaper: wall}
     window.localStorage.setItem('winXP', JSON.stringify(this.dadosObj))
+    this.$emit('setWallpaper')
   }
 
   beforeMount(){

@@ -36,7 +36,7 @@
     <q-card-section style="width: 100%" class="flex justify-end items-center">
       <div class="flex row q-gutter-x-md">
         <div class="flex row flex-center">
-          <q-btn class="logoffBtn" glossy size="8px" icon="vpn_key"></q-btn>
+          <q-btn @click="$router.push('/login')" class="logoffBtn" glossy size="8px" icon="vpn_key"></q-btn>
           <p class="q-pl-sm q-mt-md" style="color: white; font-weight: bold">Fazer Logoff</p>
         </div>
         <div class="flex row flex-center">

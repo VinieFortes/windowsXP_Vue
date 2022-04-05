@@ -1,9 +1,11 @@
 <template>
-  <q-page class="wallpaper" id="home" @click="leftClick" @contextmenu.native="rightClick($event)">
-    <div class="icones flex column q-pa-md">
-      <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
-        <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
-        <span class="texticon text-white">{{ item.nome }}</span>
+  <q-page class="wallpaper flex column" id="home" @click="leftClick" @contextmenu.native="rightClick($event)">
+    <div style="height: 93%; width: 100%; position: absolute" class="drag icones flex column">
+      <div>
+        <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
+          <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
+          <span class="texticon text-white">{{ item.nome }}</span>
+        </div>
       </div>
     </div>
     <Bar @appBar="openWindow" class="bar"></Bar>
@@ -67,13 +69,14 @@
       </q-list>
 
     </q-menu>
-    <window v-if="showWindow" @close="showWindow = false" @maximize="maximizeWindow()" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
+    <window v-if="showWindow" @close="showWindow = false" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
     <vue-selecto
         :selectableTargets="['.Icon']"
         :hitRate="10"
         :selectByClick="true"
         :continueSelect="true"
         @selectEnd="onSelectEnd"
+        dragContainer=".drag"
     />
   </q-page>
 </template>
@@ -98,10 +101,12 @@ export default class Home extends Vue {
 
   onSelectEnd(e: any){
     Array.prototype.forEach.call(e.selected, function(el) {
-    if(el.style.backgroundColor === 'blue'){
+    if(el.style.backgroundColor === 'rgb(15, 132, 225)'){
       el.style.backgroundColor = null
+      el.style.opacity = null
     }else {
-      el.style.backgroundColor = 'blue'
+      el.style.backgroundColor = 'rgb(15, 132, 225)'
+      el.style.opacity = '0.7'
     }
       e.currentTarget.selectedTargets = []
   })
@@ -122,12 +127,15 @@ export default class Home extends Vue {
     }
   }
 
+  dadosPersonalizar(){
+    this.setWallpaper()
+  }
+
   setWallpaper(){
     const wallpaper = document.getElementById('home');
     const dados = window.localStorage.getItem('winXP')
     const dadosObj = JSON.parse(dados!)
     wallpaper!.style.backgroundImage = 'url(' + this.getImgUrl(`${dadosObj.wallpaper}`) + ')';
-    setTimeout(this.setWallpaper, 1000)
   }
 
 

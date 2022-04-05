@@ -47,7 +47,8 @@
     </div>
     <Lixeira v-if="nomePrograma === 'Lixeira'"/>
     <MeuComputador v-if="nomePrograma === 'Meu Computador'" />
-    <Personalizar v-if="nomePrograma === 'Personalizar'"/>
+    <Personalizar @setWallpaper="dadosPersonalizacao" v-if="nomePrograma === 'Personalizar'"/>
+    <InternetExplorer v-if="nomePrograma === 'Internet Explorer'"/>
   </div>
 </template>
 
@@ -57,9 +58,10 @@ import {Emit, Prop} from "vue-property-decorator";
 import Lixeira from "@/apps/Lixeira.vue";
 import MeuComputador from "@/apps/MeuComputador.vue";
 import Personalizar from "@/apps/Personalizar.vue";
+import InternetExplorer from "@/apps/InternetExplorer.vue";
 
 @Options({
-  components: {Personalizar, MeuComputador, Lixeira},
+  components: {InternetExplorer, Personalizar, MeuComputador, Lixeira},
   component: {}})
 export default class Window extends Vue{
 
@@ -71,6 +73,10 @@ export default class Window extends Vue{
   @Emit("maximize")
   maximize(){
     return false;
+  }
+
+  dadosPersonalizacao(){
+    this.$emit('dadosFromWall')
   }
 
   @Prop()nomePrograma! : string
