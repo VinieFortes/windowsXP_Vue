@@ -30,15 +30,12 @@ export default class DialogRename extends Vue {
   @VModel({ type: Boolean }) exibirModal!: boolean
   @Prop() iconApp!: string
   @Prop() nomeApp!: string
+  @Prop() idApp!: string
 
   newNomeApp = ''
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)
-  }
-
-  mounted(){
-    this.newNomeApp = this.nomeApp
   }
 
   onSubmit(){

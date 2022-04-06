@@ -45,10 +45,10 @@
         </q-breadcrumbs>
       </div>
     </div>
-    <Lixeira v-if="nomePrograma === 'Lixeira'"/>
-    <MeuComputador v-if="nomePrograma === 'Meu Computador'" />
-    <Personalizar @setWallpaper="dadosPersonalizacao" v-if="nomePrograma === 'Personalizar'"/>
-    <InternetExplorer v-if="nomePrograma === 'Internet Explorer'"/>
+    <Lixeira v-if="idPrograma === 'lixeira'"/>
+    <MeuComputador v-if="idPrograma === 'meu_computador'" />
+    <Personalizar @setWallpaper="dadosPersonalizacao" v-if="idPrograma === 'personalizar'"/>
+    <InternetExplorer v-if="idPrograma === 'internet_explorer'"/>
   </div>
 </template>
 
@@ -86,6 +86,7 @@ export default class Window extends Vue{
 
   @Prop()nomePrograma! : string
   @Prop()iconPrograma! : any
+  @Prop()idPrograma! : string
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)

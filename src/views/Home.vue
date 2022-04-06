@@ -2,8 +2,8 @@
   <q-page class="wallpaper flex column" id="home" @click="leftClick">
     <div style="height: 93%; width: 100%; position: absolute" class="drag icones flex column">
       <div id="grid" class="q-pa-sm">
-        <div v-for="item in icones" @contextmenu.native="rightClick(item.nome)" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
-          <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
+        <div v-for="item in icones" @contextmenu.native="rightClick(item.nome)" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img, item.id)"  class="Icon flex column flex-center">
+          <q-img  :width="iconSizeVar" :src="getImgUrl(item.img)"></q-img>
           <span class="texticon text-white">{{ item.nome }}</span>
           <q-menu
               touch-position
@@ -26,23 +26,55 @@
         </div>
       </div>
     </div>
-    <Bar @appBar="openWindow" @maximizeBar="maximizeFromBar" :show-appin-bar="showAppBar" :icon-programa="iconPrograma" :nome-programa="nomePrograma" class="bar"></Bar>
+    <Bar @appBar="openWindow" @maximizeBar="maximizeFromBar" :show-appin-bar="showAppBar" :icon-programa="iconPrograma"  :nome-programa="nomePrograma" class="bar"></Bar>
     <q-menu
         touch-position
         context-menu
     >
       <q-list dense style="min-width: 100px">
-        <q-item clickable v-close-popup>
+        <q-item clickable>
           <q-item-section>Visualizar</q-item-section>
           <q-item-section side>
             <q-icon name="keyboard_arrow_right" />
           </q-item-section>
+          <q-menu anchor="top end" self="top start">
+            <q-list>
+              <q-item
+                  dense
+                  clickable
+              >
+                <q-item-section @click="iconSize('sm')" >Icones Pequenos</q-item-section>
+              </q-item>
+              <q-item
+                  dense
+                  clickable
+              >
+                <q-item-section @click="iconSize('md')">Icones Medios</q-item-section>
+              </q-item>
+              <q-item
+                  dense
+                  clickable
+              >
+                <q-item-section @click="iconSize('lg')" >Icones Grandes</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </q-item>
-        <q-item clickable v-close-popup>
+        <q-item clickable>
           <q-item-section>Ordenar por</q-item-section>
           <q-item-section side>
             <q-icon name="keyboard_arrow_right" />
           </q-item-section>
+          <q-menu anchor="top end" self="top start">
+            <q-list>
+              <q-item
+                  dense
+                  clickable
+              >
+                <q-item-section @click="ordemIcons('alf')">Alfabetica</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </q-item>
         <q-separator />
         <q-item clickable>
@@ -70,13 +102,13 @@
 
         </q-item>
         <q-separator />
-        <q-item @click="menuClick('Personalizar')" clickable v-close-popup>
+        <q-item @click="menuClick('Personalizar', 'personalizar')" clickable v-close-popup>
           <q-item-section>Personalizar</q-item-section>
         </q-item>
       </q-list>
 
     </q-menu>
-    <window v-if="showWindow" @close="showWindow = false; showAppBar = false" @minimaze="minimazeWindow()" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
+    <window v-if="showWindow"  @close="showWindow = false; showAppBar = false" @minimaze="minimazeWindow()" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" :id-programa="idPrograma" class="window"/>
     <vue-selecto
         :selectableTargets="['.Icon']"
         :hitRate="10"
@@ -105,12 +137,14 @@ export default class Home extends Vue {
   showWindow = false
   nomePrograma = ''
   iconPrograma = ''
-  icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
+  idPrograma = ''
+  icones = [{img:'lixeira.png', nome: 'Lixeira', id: 'lixeira'}, {img: 'computer.png', nome: 'Meu Computador', id: 'meu_computador'}, {img: 'documentos.png', nome: 'Meus Documentos', id: 'meus_documentos'}, {img: 'explorer.png', nome: 'Internet Explorer', id: 'internet_explorer'}]
   dadosWindows = {}
   showAppBar = false
 
   showModal = false
 
+  iconSizeVar = '52px'
 
   onSelectEnd(e: any){
     Array.prototype.forEach.call(e.selected, function(el) {
@@ -153,7 +187,7 @@ export default class Home extends Vue {
   }
 
   newFile(args: any){
-    args === 'pasta' ? this.icones.push({img: 'pasta.png', nome: 'Pasta vazia'}) : (args === 'file' ? this.icones.push({img: 'file.png', nome: 'Novo arquivo'}) : null )
+    args === 'pasta' ? this.icones.push({img: 'pasta.png', nome: 'Pasta vazia', id: 'pasta'}) : (args === 'file' ? this.icones.push({img: 'file.png', nome: 'Novo arquivo', id: 'arquivo'}) : null )
   }
 
 
@@ -172,16 +206,18 @@ export default class Home extends Vue {
   leftClick(){
   }
 
-  openWindow(nome: string, icon: any){
+  openWindow(nome: string, icon: any, id: any){
     this.showWindow = true
     this.nomePrograma = nome
     this.iconPrograma = icon
+    this.idPrograma = id
     this.showAppBar = true
   }
 
-  menuClick(nome: any){
+  menuClick(nome: any, id: any){
     this.showWindow = true
     this.nomePrograma = nome
+    this.idPrograma = id
     this.iconPrograma = 'computer.png'
     this.showAppBar = true
   }
@@ -244,7 +280,7 @@ export default class Home extends Vue {
 
   }
 
-  checkDbclick(nome: any, icon: any){
+  checkDbclick(nome: any, icon: any, id: any){
     const els = document.getElementsByClassName("Icon");
     let eltoOpen = ''
     Array.prototype.forEach.call(els, function(el) {
@@ -252,7 +288,7 @@ export default class Home extends Vue {
           eltoOpen = nome
         }
     });
-    this.openWindow(eltoOpen, icon)
+    this.openWindow(eltoOpen, icon, id)
   }
 
   rightClick(nome: any){
@@ -287,6 +323,18 @@ export default class Home extends Vue {
     this.icones = this.icones.filter((item) => {
       return item.nome !== nome
     });
+  }
+
+  iconSize(size: any){
+    size === 'sm' ? this.iconSizeVar = '36px' : (size === 'md' ? this.iconSizeVar = '56px' : this.iconSizeVar = '72px')
+  }
+
+  ordemIcons(ordem: any){
+    ordem === 'alf' ? this.icones.sort(function(a, b){
+      if(a.nome < b.nome) { return -1; }
+      if(a.nome > b.nome) { return 1; }
+      return 0;
+    }) : null
   }
 }
 </script>
