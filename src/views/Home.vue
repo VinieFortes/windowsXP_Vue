@@ -1,14 +1,32 @@
 <template>
-  <q-page class="wallpaper flex column" id="home" @click="leftClick" @contextmenu.native="rightClick($event)">
+  <q-page class="wallpaper flex column" id="home" @click="leftClick">
     <div style="height: 93%; width: 100%; position: absolute" class="drag icones flex column">
       <div id="grid" class="q-pa-sm">
-        <div v-for="item in icones" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
+        <div v-for="item in icones" @contextmenu.native="rightClick($event)" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
           <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
           <span class="texticon text-white">{{ item.nome }}</span>
+          <q-menu
+              touch-position
+              context-menu
+          >
+            <q-list dense style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>Renomear</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>Excluir</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable>
+                <q-item-section>Propriedades</q-item-section>
+              </q-item>
+            </q-list>
+
+          </q-menu>
         </div>
       </div>
     </div>
-    <Bar @appBar="openWindow" class="bar"></Bar>
+    <Bar @appBar="openWindow" @maximizeBar="maximizeFromBar" :show-appin-bar="showAppBar" :icon-programa="iconPrograma" :nome-programa="nomePrograma" class="bar"></Bar>
     <q-menu
         touch-position
         context-menu
@@ -58,7 +76,7 @@
       </q-list>
 
     </q-menu>
-    <window v-if="showWindow" @close="showWindow = false" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
+    <window v-if="showWindow" @close="showWindow = false; showAppBar = false" @minimaze="minimazeWindow()" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" class="window"/>
     <vue-selecto
         :selectableTargets="['.Icon']"
         :hitRate="10"
@@ -87,6 +105,8 @@ export default class Home extends Vue {
   iconPrograma = ''
   icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
   dadosWindows = {}
+  showAppBar = false
+
 
   onSelectEnd(e: any){
     Array.prototype.forEach.call(e.selected, function(el) {
@@ -152,12 +172,14 @@ export default class Home extends Vue {
     this.showWindow = true
     this.nomePrograma = nome
     this.iconPrograma = icon
+    this.showAppBar = true
   }
 
   menuClick(nome: any){
     this.showWindow = true
     this.nomePrograma = nome
     this.iconPrograma = 'computer.png'
+    this.showAppBar = true
   }
 
   maximizeWindow(){
@@ -177,6 +199,47 @@ export default class Home extends Vue {
     })
   }
 
+  maximizeFromBar(){
+    this.showWindow = true
+    const window = document.getElementsByClassName("window");
+    Array.prototype.forEach.call(window, function(el) {
+      if(el.style.height === '100%' && el.style.width === '100%') {
+        el.style.top = '20%'
+        el.style.left = '25%'
+        el.style.width = '50%'
+        el.style.height = '50%'
+      }
+    })
+  }
+
+  minimazeWindow(){
+    const window = document.getElementsByClassName("window");
+    Array.prototype.forEach.call(window, (el) => {
+      const style = document.createElement('style');
+      style.innerHTML = '@keyframes mymove\n' +
+          '{\n' +
+          '  from {transform: translateY(0) translateX(0); opacity: 1; width: 50%; height: 50%}\n' +
+          '  to { transform: translateY(500px) translateX(-200px); opacity: 0; width: 1%; height 1%}\n' +
+          '}'
+      el.style.cssText = 'animation: mymove 1s alternate '
+      el.appendChild(style);
+    })
+    setTimeout(()=>{this.showWindow = false}, 1000)
+    setTimeout(()=>{if(!this.showWindow){
+      const app = document.getElementsByClassName("appsBar");
+      Array.prototype.forEach.call(app, function(el) {
+        const style = document.createElement('style');
+        style.innerHTML = '@keyframes color {\n' +
+            '  from {opacity: 0.3}\n' +
+            '  to {background-color: inherit; opacity: 1}\n' +
+            '}'
+        el.style.cssText = 'animation: color 1s infinite alternate-reverse ease; cursor: pointer '
+        el.appendChild(style);
+      })
+    }}, 1001)
+
+  }
+
   checkDbclick(nome: any, icon: any){
     const els = document.getElementsByClassName("Icon");
     let eltoOpen = ''
@@ -188,8 +251,14 @@ export default class Home extends Vue {
     this.openWindow(eltoOpen, icon)
   }
 
-  rightClick(){
-
+  rightClick(el: any){
+      if(el.path[3].style.backgroundColor === 'rgb(15, 132, 225)'){
+        el.path[3].style.backgroundColor = null
+        el.path[3].style.opacity = null
+      }else {
+        el.path[3].style.backgroundColor = 'rgb(15, 132, 225)'
+        el.path[3].style.opacity = '0.7'
+      }
   }
 }
 </script>
@@ -209,6 +278,7 @@ export default class Home extends Vue {
   background-size: cover;
   overflow: hidden;
 }
+
 
 #grid{
   display: grid;

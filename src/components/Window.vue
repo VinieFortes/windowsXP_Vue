@@ -7,7 +7,7 @@
           <span style="font-weight: bold">{{ nomePrograma }}</span>
         </div>
         <div class="btns q-gutter-x-sm">
-          <q-btn class="sizeBtn" glossy size="7px" icon="minimize"></q-btn>
+          <q-btn class="sizeBtn" glossy size="7px" icon="minimize" @click="$emit('minimaze')"></q-btn>
           <q-btn class="sizeBtn" glossy size="7px" icon="maximize" @click="$emit('maximize')"></q-btn>
           <q-btn class="closeBtn" glossy size="7px" icon="close" @click="$emit('close')"></q-btn>
         </div>
@@ -72,6 +72,11 @@ export default class Window extends Vue{
 
   @Emit("maximize")
   maximize(){
+    return false;
+  }
+
+  @Emit("minimaze")
+  minimaze(){
     return false;
   }
 
