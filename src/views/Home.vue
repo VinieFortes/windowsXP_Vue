@@ -139,7 +139,7 @@ export default class Home extends Vue {
   iconPrograma = ''
   idPrograma = ''
   icones = [{img:'lixeira.png', nome: 'Lixeira', id: 'lixeira'}, {img: 'computer.png', nome: 'Meu Computador', id: 'meu_computador'}, {img: 'documentos.png', nome: 'Meus Documentos', id: 'meus_documentos'}, {img: 'explorer.png', nome: 'Internet Explorer', id: 'internet_explorer'}]
-  dadosWindows = {}
+  dadosWindows = {wallpaper: 'wallpaper.jpg', color: '#0054e4'}
   showAppBar = false
 
   showModal = false
@@ -166,12 +166,13 @@ export default class Home extends Vue {
     }, false);
     const wallpaper = document.getElementById('home');
     if(!window.localStorage.getItem('winXP')){
-      this.dadosWindows = {wallpaper: 'wallpaper.jpg'}
+      this.dadosWindows = {wallpaper: 'wallpaper.jpg', color: '#0054e4'}
       window.localStorage.setItem('winXP', JSON.stringify(this.dadosWindows))
       wallpaper!.style.backgroundImage = 'url(' + this.getImgUrl('wallpaper.jpg') + ')';
       const dados = window.localStorage.getItem('winXP')
       const dadosObjs = JSON.parse(dados!)
-      document.body.style.setProperty('--main-color',dadosObjs.color)
+      this.dadosWindows = {wallpaper: 'wallpaper.jpg', color: dadosObjs.color}
+      document.body.style.setProperty('--main-color',this.dadosWindows.color)
     }else {
         this.setWallpaper()
     }
