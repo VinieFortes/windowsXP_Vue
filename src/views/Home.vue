@@ -2,7 +2,7 @@
   <q-page class="wallpaper flex column" id="home" @click="leftClick">
     <div style="height: 93%; width: 100%; position: absolute" class="drag icones flex column">
       <div id="grid" class="q-pa-sm">
-        <div v-for="item in icones" @contextmenu.native="rightClick($event)" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
+        <div v-for="item in icones" @contextmenu.native="rightClick(item.nome)" :id="item.nome" v-on:dblclick="checkDbclick(item.nome, item.img)"  class="Icon flex column flex-center">
           <q-img  width="52px" :src="getImgUrl(item.img)"></q-img>
           <span class="texticon text-white">{{ item.nome }}</span>
           <q-menu
@@ -10,10 +10,10 @@
               context-menu
           >
             <q-list dense style="min-width: 100px">
-              <q-item clickable v-close-popup>
+              <q-item @click="renomearApp(item.nome, item.img)" clickable v-close-popup>
                 <q-item-section>Renomear</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item @click="removeApp(item.nome)" clickable v-close-popup>
                 <q-item-section>Excluir</q-item-section>
               </q-item>
               <q-separator />
@@ -85,17 +85,19 @@
         @selectEnd="onSelectEnd"
         dragContainer=".drag"
     />
+    <DialogRename v-model="showModal" :icon-app="iconPrograma" :nome-app="nomePrograma" @rename="changeNameApp" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import {Options, Vue} from 'vue-class-component';
 import Bar from '@/components/Bar.vue';
-import { VueSelecto } from "vue3-selecto";
+import {VueSelecto} from "vue3-selecto";
 import Window from "@/components/Window.vue";
+import DialogRename from "@/components/DialogRename.vue";
 
 @Options({
-  components: {VueSelecto, Bar, Window}
+  components: {DialogRename, VueSelecto, Bar, Window}
 })
 
 export default class Home extends Vue {
@@ -106,6 +108,8 @@ export default class Home extends Vue {
   icones = [{img:'lixeira.png', nome: 'Lixeira'}, {img: 'computer.png', nome: 'Meu Computador'}, {img: 'documentos.png', nome: 'Meus Documentos'}, {img: 'explorer.png', nome: 'Internet Explorer'} ]
   dadosWindows = {}
   showAppBar = false
+
+  showModal = false
 
 
   onSelectEnd(e: any){
@@ -251,14 +255,38 @@ export default class Home extends Vue {
     this.openWindow(eltoOpen, icon)
   }
 
-  rightClick(el: any){
-      if(el.path[3].style.backgroundColor === 'rgb(15, 132, 225)'){
-        el.path[3].style.backgroundColor = null
-        el.path[3].style.opacity = null
-      }else {
-        el.path[3].style.backgroundColor = 'rgb(15, 132, 225)'
-        el.path[3].style.opacity = '0.7'
+  rightClick(nome: any){
+    const els = document.getElementsByClassName("Icon");
+    Array.prototype.forEach.call(els, function(el) {
+      if(el.id === nome && el.style.backgroundColor === 'rgb(15, 132, 225)'){
+        console.log('cond1', nome)
+        el.style.backgroundColor = null
+        el.style.opacity = null
+      }else if (el.id === nome && el.style.backgroundColor !== 'rgb(15, 132, 225)') {
+        el.style.backgroundColor = 'rgb(15, 132, 225)'
+        el.style.opacity = '0.7'
       }
+    })
+
+  }
+  renomearApp(nome: any, icon: any){
+    this.nomePrograma = nome;
+    this.iconPrograma = icon;
+    this.showModal = true
+  }
+
+  changeNameApp(oldNameApp: string, newNameApp: string){
+    this.icones = this.icones.map((item) => {
+      item.nome === oldNameApp ? item.nome = newNameApp : null
+      return {...item}
+    });
+    this.showModal = false
+  }
+
+  removeApp(nome: any){
+    this.icones = this.icones.filter((item) => {
+      return item.nome !== nome
+    });
   }
 }
 </script>

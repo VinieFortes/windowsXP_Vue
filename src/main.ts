@@ -1,9 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import { Quasar } from 'quasar'
+import {Dialog, Quasar} from 'quasar'
 // @ts-ignore
 import quasarUserOptions from './quasar-user-options'
 
-createApp(App).use(Quasar, quasarUserOptions).use(router).mount('#app')
+const app = createApp(App);
+app.use(Quasar, {plugins: {Dialog}}, quasarUserOptions)
+app.use(router).mount('#app')
 
