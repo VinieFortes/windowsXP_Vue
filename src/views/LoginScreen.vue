@@ -9,9 +9,9 @@
       <div class="flex column">
         <div @click="gotoHome" class="cardUser flex row flex-center">
           <q-avatar size="64px" rounded>
-            <img class="user" src="../assets/dog.jpg" alt="logo">
+            <img class="user" :src="getImgUrl(dadosUser.img)" alt="user">
           </q-avatar>
-          <p class="userName">Administrador</p>
+          <p class="userName">{{ dadosUser.nome }}</p>
         </div>
       </div>
     </div>
@@ -27,8 +27,21 @@ import {Vue} from "vue-class-component";
 
 export default class LoginScreen extends Vue{
 
+  dadosUser = {img: 'dog.jpg', nome: ''}
+
   gotoHome(){
     this.$router.push('/')
+  }
+
+  mounted(){
+    const dadosUser = window.localStorage.getItem('winXP_user')
+    const dadosUserObj = JSON.parse(dadosUser!)
+    this.dadosUser = dadosUserObj
+  }
+
+
+  getImgUrl(pic: string) {
+    return require('../assets/'+pic)
   }
 }
 </script>

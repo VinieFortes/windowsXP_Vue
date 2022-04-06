@@ -1,16 +1,16 @@
 <template>
   <q-card class="menuBar flex column justify-start items-start">
     <q-card-section style="cursor: pointer" class="q-pa-sm">
-      <div class="cardUser flex row flex-center">
+      <div @click="runApp('Usuario', 'computer.png')" class="cardUser flex row flex-center">
         <q-avatar size="64px" rounded>
-          <img class="user" src="../assets/dog.jpg" alt="logo">
+          <img class="user" :src="getImgUrl(dadosUser.img)" alt="logo">
         </q-avatar>
-        <p class="userName">Administrador</p>
+        <p class="userName">{{ dadosUser.nome }}</p>
       </div>
     </q-card-section>
     <q-card-section id="apps" class="no-padding flex row">
       <div id="appsWhite" class="q-pa-sm">
-        <div v-for="item in apps" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in apps" @click="runApp(item.nome, item.img, item.id)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appName">{{item.nome}}</span>
         </div>
@@ -22,12 +22,12 @@
       </div>
 
       <div id="appsBlue" class="q-pa-sm">
-        <div v-for="item in appsPasta" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in appsPasta" @click="runApp(item.nome, item.img, item.id)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
             <span class="appNameSystem">{{item.nome}}</span>
         </div>
         <q-separator class="q-mb-md"></q-separator>
-        <div v-for="item in appsSystem" @click="runApp(item.nome, item.img)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
+        <div v-for="item in appsSystem" @click="runApp(item.nome, item.img, item.id)" style="cursor: pointer" class="app flex row items-center q-gutter-x-sm q-pa-sm">
           <q-img  width="32px" :src="getImgUrl(item.img)"></q-img>
           <span class="appNameSystem">{{item.nome}}</span>
         </div>
@@ -54,16 +54,24 @@ import {Emit} from "vue-property-decorator";
 
 export default class MenuBar extends Vue{
 
-  apps = [{img: 'explorer.png', nome: 'Internet Explorer'}, {img: 'email.png', nome: 'E-mail'}, {img: 'media.png', nome: 'Windows Media Player'}, {img: 'firefox.png', nome: 'Mozilla Firefox'}, {img: 'live.png', nome: 'Windows Messenger'}, {img: 'wordpad.png', nome: 'WordPad'}, {img: 'paint.png', nome: 'Paint'}]
-  appsPasta = [{img: 'pasta.png', nome: 'Meus Documentos'}, {img: 'pasta.png', nome: 'Minhas Imagens'}, {img: 'pasta.png', nome: 'Minhas Musicas'}]
-  appsSystem = [{img: 'computer.png', nome: 'Meu Computador'}, {img: 'net.png', nome: 'Redes'}, {img: 'panel.png', nome: 'Painel de Controle'}]
+  apps = [{img: 'explorer.png', nome: 'Internet Explorer', id: 'internet_explorer'}, {img: 'email.png', nome: 'E-mail'}, {img: 'media.png', nome: 'Windows Media Player'}, {img: 'firefox.png', nome: 'Mozilla Firefox'}, {img: 'live.png', nome: 'Windows Messenger'}, {img: 'wordpad.png', nome: 'WordPad'}, {img: 'paint.png', nome: 'Paint'}]
+  appsPasta = [{img: 'pasta.png', nome: 'Meus Documentos', id: 'meus_documentos'}, {img: 'pasta.png', nome: 'Minhas Imagens'}, {img: 'pasta.png', nome: 'Minhas Musicas'}]
+  appsSystem = [{img: 'computer.png', nome: 'Meu Computador', id: 'meu_computador'}, {img: 'net.png', nome: 'Redes'}, {img: 'panel.png', nome: 'Painel de Controle'}]
+
+  dadosUser = {img: 'dog.jpg', nome: ''}
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)
   }
 
-  runApp(nome: any, img: any){
-    this.$emit('appName', nome, img)
+  runApp(nome: any, img: any, id: any){
+    this.$emit('appName', nome, img, id)
+  }
+
+  mounted(){
+    const dadosUser = window.localStorage.getItem('winXP_user')
+    const dadosUserObj = JSON.parse(dadosUser!)
+    this.dadosUser = dadosUserObj
   }
 }
 </script>
@@ -80,6 +88,7 @@ export default class MenuBar extends Vue{
 }
 .userName{
   color: white;
+  font-weight: bold;
   padding: 10px;
   margin-top: 10px;
   font-size: 18px;

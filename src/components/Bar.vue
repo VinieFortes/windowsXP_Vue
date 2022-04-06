@@ -36,8 +36,8 @@ export default class Bar extends Vue{
   @Prop() nomePrograma!: string
   @Prop() iconPrograma!: string
 
-  app(nome: any, icon: any){
-    this.$emit('appBar', nome, icon)
+  app(nome: any, icon: any, id: any){
+    this.$emit('appBar', nome, icon, id)
     this.showMenuBar()
   }
 

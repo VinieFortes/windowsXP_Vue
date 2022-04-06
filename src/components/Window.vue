@@ -49,6 +49,7 @@
     <MeuComputador v-if="idPrograma === 'meu_computador'" />
     <Personalizar @setWallpaper="dadosPersonalizacao" v-if="idPrograma === 'personalizar'"/>
     <InternetExplorer v-if="idPrograma === 'internet_explorer'"/>
+    <User v-if="nomePrograma === 'Usuario'"/>
   </div>
 </template>
 
@@ -59,9 +60,10 @@ import Lixeira from "@/apps/Lixeira.vue";
 import MeuComputador from "@/apps/MeuComputador.vue";
 import Personalizar from "@/apps/Personalizar.vue";
 import InternetExplorer from "@/apps/InternetExplorer.vue";
+import User from "@/apps/User.vue";
 
 @Options({
-  components: {InternetExplorer, Personalizar, MeuComputador, Lixeira},
+  components: {User, InternetExplorer, Personalizar, MeuComputador, Lixeira},
   component: {}})
 export default class Window extends Vue{
 
