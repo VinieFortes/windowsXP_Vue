@@ -27,7 +27,7 @@ Criar uma cópia não exata do classico do Windows XP, com intuito de praticar m
 <li>SessionStorage armazena um booleano que identifica se o sistema ja foi iniciado para exibir ou não tela de loading inicial</li>
 
 
-####Alguns Print's :
+<h2>Alguns Print's :</h2>
 
 <img src="./prints/print1.png">
 <img src="./prints/print3.png">
