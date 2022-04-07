@@ -189,7 +189,6 @@ export default class Home extends Vue {
       return item.index !== index
     });
     this.showWindow(false)
-    this.showAppBar = false;
   }
 
   dadosPersonalizar(){
@@ -243,6 +242,7 @@ export default class Home extends Vue {
   }
 
   menuClick(nome: any, id: any){
+    this.appsRunning.push({nome: nome, icon: 'computer.png', id: id, index: this.appIndex, minimazeWindow: false})
     this.showWindow(true)
     this.nomePrograma = nome
     this.idPrograma = id
