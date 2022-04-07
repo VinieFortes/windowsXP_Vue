@@ -1,15 +1,15 @@
 <template>
-  <div style="min-width: 400px" id="mydiv">
-    <div id="mydivheader">
+  <div style="min-width: 400px" class="one">
+    <div class="mydivheader">
       <div class="menuBar flex row justify-between q-gutter-x-lg items-center">
         <div class="q-gutter-x-sm">
           <q-img  width="22px" :src="getImgUrl(iconPrograma)"></q-img>
           <span style="font-weight: bold">{{ nomePrograma }}</span>
         </div>
         <div class="btns q-gutter-x-sm">
-          <q-btn class="sizeBtn" glossy size="7px" icon="minimize" @click="$emit('minimaze')"></q-btn>
-          <q-btn class="sizeBtn" glossy size="7px" icon="maximize" @click="$emit('maximize')"></q-btn>
-          <q-btn class="closeBtn" glossy size="7px" icon="close" @click="$emit('close')"></q-btn>
+          <q-btn class="sizeBtn" glossy size="7px" icon="minimize" @click="minimaze(nomePrograma)"></q-btn>
+          <q-btn class="sizeBtn" glossy size="7px" icon="maximize" @click="maximize(nomePrograma)"></q-btn>
+          <q-btn class="closeBtn" glossy size="7px" icon="close" @click="close(nomePrograma)"></q-btn>
         </div>
       </div>
     </div>
@@ -67,19 +67,16 @@ import User from "@/apps/User.vue";
   component: {}})
 export default class Window extends Vue{
 
-  @Emit("close")
-  close(){
-    return false;
+  close(app: any){
+    this.$emit('close', app, this.indexPrograma)
   }
 
-  @Emit("maximize")
-  maximize(){
-    return false;
+  maximize(app: any){
+    this.$emit('maximize', app, this.indexPrograma)
   }
 
-  @Emit("minimaze")
-  minimaze(){
-    return false;
+  minimaze(app: any){
+    this.$emit('minimaze', app, this.indexPrograma)
   }
 
   dadosPersonalizacao(){
@@ -89,37 +86,37 @@ export default class Window extends Vue{
   @Prop()nomePrograma! : string
   @Prop()iconPrograma! : any
   @Prop()idPrograma! : string
+  @Prop()indexPrograma! : number
 
   getImgUrl(pic: string) {
     return require('../assets/'+pic)
   }
 
-  dragElement(elmnt: HTMLElement | null) {
+  dragElement(elmnt: any) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt!.id + "header")) {
-      document.getElementById(elmnt!.id + "header")!.onmousedown = dragMouseDown;
+    if (document.getElementsByClassName("mydivheader")) {
+      elmnt.onmousedown = dragMouseDown;
     } else {
-      elmnt!.onmousedown = dragMouseDown;
+      elmnt.onmousedown = dragMouseDown;
     }
 
     function dragMouseDown(e: any) {
       e = e || window.event;
-      e.preventDefault();
-      pos3 = e.clientX;
-      pos4 = e.clientY;
+      pos3 = parseInt(e.clientX);
+      pos4 = parseInt(e.clientY);
       document.onmouseup = closeDragElement;
       document.onmousemove = elementDrag;
+      return false;
     }
 
     function elementDrag(e: any) {
       e = e || window.event;
-      e.preventDefault();
-      pos1 = pos3 - e.clientX;
-      pos2 = pos4 - e.clientY;
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      elmnt!.style.top = (elmnt!.offsetTop - pos2) + "px";
-      elmnt!.style.left = (elmnt!.offsetLeft - pos1) + "px";
+      pos1 = pos3 - parseInt(e.clientX);
+      pos2 = pos4 - parseInt(e.clientY);
+      pos3 = parseInt(e.clientX);
+      pos4 = parseInt(e.clientY);
+      elmnt.parentNode.style.top = (elmnt.parentNode.offsetTop - pos2) + "px";
+      elmnt.parentNode.style.left = (elmnt.parentNode.offsetLeft - pos1) + "px";
     }
 
     function closeDragElement() {
@@ -129,7 +126,10 @@ export default class Window extends Vue{
   }
 
   mounted(){
-    this.dragElement(document.getElementById("mydiv"));
+    const draggableElements = document.getElementsByClassName("mydivheader");
+    for(let i = 0; i < draggableElements.length; i++){
+      this.dragElement(draggableElements[i]);
+    }
   }
 
 }
@@ -137,17 +137,17 @@ export default class Window extends Vue{
 
 <style scoped>
 
-#mydiv {
+.one {
   position: absolute;
   z-index: 9;
   background-color: #f1f1f1;
   text-align: center;
-  resize: both;
   overflow: auto;
   border: var(--main-color) solid 5px;
-  border-radius: 10px;
+  box-shadow: -5px -4px 15px 1px rgba(255,255,255,0.2);
+  border-radius: 6px 6px 0 0;
 }
-#mydivheader {
+.mydivheader {
   padding: 5px;
   cursor: move;
   z-index: 10;

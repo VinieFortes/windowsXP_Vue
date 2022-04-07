@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <Bar @appBar="openWindow" @maximizeBar="maximizeFromBar" :show-appin-bar="showAppBar" :icon-programa="iconPrograma"  :nome-programa="nomePrograma" class="bar"></Bar>
+    <Bar @appBar="openWindow" @maximizeBar="maximizeFromBar" :apps="appsRunning" :show-appin-bar="showAppBar" :icon-programa="iconPrograma"  :nome-programa="nomePrograma"  class="bar"></Bar>
     <q-menu
         touch-position
         context-menu
@@ -108,7 +108,7 @@
       </q-list>
 
     </q-menu>
-    <window v-if="showWindow"  @close="showWindow = false; showAppBar = false" @minimaze="minimazeWindow()" @maximize="maximizeWindow()" @dadosFromWall="dadosPersonalizar" :nome-programa="nomePrograma" :icon-programa="iconPrograma" :id-programa="idPrograma" class="window"/>
+    <window v-for="window in appsRunning" :id="window.nome" v-if="showWindow"  v-show="!window.minimazeWindow" @close="closeWindow" @minimaze="minimazeWindow" @maximize="maximizeWindow" @dadosFromWall="dadosPersonalizar" :nome-programa="window.nome" :icon-programa="window.icon" :id-programa="window.id" :index-programa="window.index" class="window"/>
     <vue-selecto
         :selectableTargets="['.Icon']"
         :hitRate="10"
@@ -117,7 +117,7 @@
         @selectEnd="onSelectEnd"
         dragContainer=".drag"
     />
-    <DialogRename v-model="showModal" :icon-app="iconPrograma" :nome-app="nomePrograma" @rename="changeNameApp" />
+    <DialogRename  v-model="showModal" :icon-app="iconPrograma" :nome-app="nomePrograma" @rename="changeNameApp" />
   </q-page>
 </template>
 
@@ -134,7 +134,6 @@ import DialogRename from "@/components/DialogRename.vue";
 
 export default class Home extends Vue {
 
-  showWindow = false
   nomePrograma = ''
   iconPrograma = ''
   idPrograma = ''
@@ -145,6 +144,9 @@ export default class Home extends Vue {
   showModal = false
 
   iconSizeVar = '52px'
+
+  appsRunning: any[] = []
+  appIndex = 0
 
   onSelectEnd(e: any){
     Array.prototype.forEach.call(e.selected, function(el) {
@@ -178,6 +180,18 @@ export default class Home extends Vue {
     }
   }
 
+  showWindow(show: boolean){
+    return show;
+  }
+
+  closeWindow(app: any, index: any){
+    this.appsRunning = this.appsRunning.filter((item) => {
+      return item.index !== index
+    });
+    this.showWindow(false)
+    this.showAppBar = false;
+  }
+
   dadosPersonalizar(){
     this.setWallpaper()
     if(window.localStorage.getItem('winXP')){
@@ -208,76 +222,110 @@ export default class Home extends Vue {
   }
 
   openWindow(nome: string, icon: any, id: any){
-    this.showWindow = true
+    this.appIndex++
+    this.appsRunning.push({nome: nome, icon: icon, id: id, index: this.appIndex, minimazeWindow: false})
+    this.showWindow(true)
     this.nomePrograma = nome
     this.iconPrograma = icon
     this.idPrograma = id
     this.showAppBar = true
+
+    if(this.appsRunning.length > 0){
+      const window = document.getElementsByClassName("window");
+      Array.prototype.forEach.call(window, function(el, index) {
+        el.style.top = `${20 + index}%`
+        el.style.right = `${25 - index}%`
+        el.style.left = `${25 + index}%`
+        el.style.bottom = `${25 - index}%`
+        el.style.zIndex = index
+      })
+    }
   }
 
   menuClick(nome: any, id: any){
-    this.showWindow = true
+    this.showWindow(true)
     this.nomePrograma = nome
     this.idPrograma = id
     this.iconPrograma = 'computer.png'
     this.showAppBar = true
   }
 
-  maximizeWindow(){
+  maximizeWindow(app: any, index: any, minimaze: any){
+    console.log(app, index)
     const window = document.getElementsByClassName("window");
     Array.prototype.forEach.call(window, function(el) {
-      if(el.style.height === '100%' && el.style.width === '100%'){
-        el.style.top = '20%'
-        el.style.left = '25%'
-        el.style.width = '50%'
-        el.style.height = '50%'
-      }else {
-        el.style.top = '0'
-        el.style.left = '0'
-        el.style.width = '100%'
-        el.style.height = '100%'
+      if(el.id === app) {
+        if (el.style.height === '100%' && el.style.width === '100%') {
+          el.style.top = '20%'
+          el.style.left = '25%'
+          el.style.width = '50%'
+          el.style.height = '50%'
+        } else {
+          el.style.top = '0'
+          el.style.left = '0'
+          el.style.width = '100%'
+          el.style.height = '100%'
+        }
       }
     })
   }
 
-  maximizeFromBar(){
-    this.showWindow = true
+  maximizeFromBar(app: any, index: any, minimaze: any){
     const window = document.getElementsByClassName("window");
     Array.prototype.forEach.call(window, function(el) {
-      if(el.style.height === '100%' && el.style.width === '100%') {
-        el.style.top = '20%'
-        el.style.left = '25%'
-        el.style.width = '50%'
-        el.style.height = '50%'
+      if(el.id === app){
+        const style = document.createElement('style');
+        style.innerHTML = '@keyframes mymove\n' +
+            '{\n' +
+            '  from {transform: translateY(500px) translateX(-200px); opacity: 0; width: 50%; height: 50%}\n' +
+            '  to { transform: translateY(0) translateX(0); opacity: 1; width: 1%; height 1%}\n' +
+            '}'
+        el.style.cssText = 'animation: mymove 1s alternate '
+        el.appendChild(style);
       }
     })
+    console.log(app, index, minimaze)
+    const result = this.appsRunning.find(el => el.index === index)
+    this.appsRunning = this.appsRunning.map((item) => {
+      item === result ? item.minimazeWindow = false : null
+      return {...item}
+    });
+    // this.showWindow(true)
   }
 
-  minimazeWindow(){
+  minimazeWindow(app: any, index: any){
+    console.log('aooo')
     const window = document.getElementsByClassName("window");
     Array.prototype.forEach.call(window, (el) => {
-      const style = document.createElement('style');
-      style.innerHTML = '@keyframes mymove\n' +
-          '{\n' +
-          '  from {transform: translateY(0) translateX(0); opacity: 1; width: 50%; height: 50%}\n' +
-          '  to { transform: translateY(500px) translateX(-200px); opacity: 0; width: 1%; height 1%}\n' +
-          '}'
-      el.style.cssText = 'animation: mymove 1s alternate '
-      el.appendChild(style);
-    })
-    setTimeout(()=>{this.showWindow = false}, 1000)
-    setTimeout(()=>{if(!this.showWindow){
-      const app = document.getElementsByClassName("appsBar");
-      Array.prototype.forEach.call(app, function(el) {
+      if(el.id === app){
         const style = document.createElement('style');
-        style.innerHTML = '@keyframes color {\n' +
-            '  from {opacity: 0.3}\n' +
-            '  to {background-color: inherit; opacity: 1}\n' +
+        style.innerHTML = '@keyframes mymove2\n' +
+            '{\n' +
+            '  from {transform: translateY(0) translateX(0); opacity: 1; width: 50%; height: 50%}\n' +
+            '  to { transform: translateY(500px) translateX(-200px); opacity: 0; width: 1%; height 1%}\n' +
             '}'
-        el.style.cssText = 'animation: color 1s infinite alternate-reverse ease; cursor: pointer '
+        el.style.cssText = 'animation: mymove2 1s alternate '
         el.appendChild(style);
-      })
-    }}, 1001)
+      }
+    })
+    setTimeout(()=>{
+      const result = this.appsRunning.find(el => el.index === index)
+      this.appsRunning = this.appsRunning.map((item) => {
+        item === result ? item.minimazeWindow = true : null
+        return {...item}
+      });}, 1000)
+    // setTimeout(()=>{if(!this.showWindow){
+    //   const app = document.getElementsByClassName("appsBar");
+    //   Array.prototype.forEach.call(app, function(el) {
+    //     const style = document.createElement('style');
+    //     style.innerHTML = '@keyframes color {\n' +
+    //         '  from {opacity: 0.3}\n' +
+    //         '  to {background-color: inherit; opacity: 1}\n' +
+    //         '}'
+    //     el.style.cssText = 'animation: color 1s infinite alternate-reverse ease; cursor: pointer '
+    //     el.appendChild(style);
+    //   })
+    // }}, 1001)
 
   }
 
@@ -385,5 +433,7 @@ export default class Home extends Vue {
   position: absolute;
   top: 20%;
   left: 25%;
+  resize: both;
+  z-index: 0;
 }
 </style>

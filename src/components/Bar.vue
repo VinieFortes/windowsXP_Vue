@@ -1,16 +1,18 @@
 <template>
-  <div class="bar flex row">
+  <div class="bar flex row no-wrap">
     <div @click="showMenuBar()" id="btnI" class="btnInicar flex row q-pa-sm items-center">
       <img class="logo" src="../assets/windows.png" alt="logo">
       <p class="btnInicarTitle no-margin">Iniciar</p>
     </div>
-    <div  class="barItens">
-      <div v-if="showAppinBar" @click="maximize()" style="cursor: pointer" class="appsBar flex row items-center">
-        <q-img class="logoApp" :src="getImgUrl(iconPrograma)" alt="logo"/>
-        <p class="nomeApp no-margin">{{ nomePrograma }}</p>
+    <div style="flex: 1; z-index: 0" class="barItens">
+      <div id="grid">
+        <div  v-for="app in apps" v-if="showAppinBar" @click="maximize(app.nome, app.index, app.minimazeWindow)" style="cursor: pointer; max-height: 36px" class="appsBar flex row items-center no-wrap">
+          <q-img class="logoApp" :src="getImgUrl(app.icon)" alt="logo"/>
+          <p class="nomeApp no-margin">{{ app.nome }}</p>
+        </div>
       </div>
     </div>
-    <div class="barOptions flex row q-pa-sm items-center">
+    <div style=" z-index: 0" class="barOptions flex row q-pa-sm items-center no-wrap">
       <q-img v-for="item in icones" class="icones" @click="app(item.nome, item.img, sMenuBar = true)" alt="logo" :src="getImgUrl(item.img)">
         <q-tooltip class="bg-white text-black" :offset="[10, 10]">{{ item.tooltip }}</q-tooltip>
       </q-img>
@@ -36,13 +38,15 @@ export default class Bar extends Vue{
   @Prop() nomePrograma!: string
   @Prop() iconPrograma!: string
 
+  @Prop() apps!: any
+
   app(nome: any, icon: any, id: any){
     this.$emit('appBar', nome, icon, id)
     this.showMenuBar()
   }
 
-  maximize(){
-    this.$emit('maximizeBar')
+  maximize(app: any, index: any, minimaze: any){
+    this.$emit('maximizeBar', app, index, minimaze)
     setTimeout(()=>{
       const app = document.getElementsByClassName("appsBar");
       Array.prototype.forEach.call(app, function(el) {
@@ -120,12 +124,9 @@ export default class Bar extends Vue{
   margin-right: 5px;
 }
 
-.appsBar{
-  padding: 5px;
-  margin: 5px 0 5px 5px;
-}
-
 .nomeApp{
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -137,14 +138,23 @@ export default class Bar extends Vue{
   border-top-right-radius: 14px;
   border-bottom-right-radius: 14px;
 }
-.barItens{
-  flex: 1 auto;
+
+#grid{
+  display: grid;
+  grid-gap: 10px;
+  width: 1px;
+  grid-template-columns: 1fr fit-content(20%);
 }
+
 .appsBar{
+  grid-row: 1;
+  padding: 5px;
+  margin: 5px 0 5px 5px;
   border: solid var(--main-color) ;
   background-color:  var(--main-color);
-  width: fit-content;
+  min-width: 200px;
  }
+
 .btnInicarTitle{
   color: white;
   font-size: 22px;
